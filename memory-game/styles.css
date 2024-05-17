@@ -87,7 +87,7 @@ body {
   background-color: #626262;
 }
 
-.indicator_icon_clickArea {
+.indicator_icon_container {
   position: relative;
   cursor: pointer;
 }
@@ -109,8 +109,8 @@ body {
   color: #fff;
   padding: 20px;
 }
-.indicator_icon_clickArea:hover .info_box {
-  top: 191%;
+.indicator_icon_container:hover .info_box {
+  top: 189%;
   visibility: visible;
   opacity: 1;
 }
