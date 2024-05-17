@@ -5,21 +5,42 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Word Memory Game!</title>
   <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Kumbh+Sans:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
   <div class="mainContainer">
     <div class="gameContainer">
-      <div id="score">0</div>
-      <h1 id="word">
-        
-      </h1>
-      <div class="btnContainer">
-        <button class="btnChoice" id="btnNotSeen">Not Seen</button>
-        <button class="btnChoice" id="btnSeen">Seen</button>
+      <div class="scoreContainer">
+        <div id="score">
+          0
+        </div>
+        <div id="highScore"></div>
       </div>
-      <div class="indicator_icon">
+      <div class="scoreTxtContainer">
+        <h5 id="scoreTxt">
+          Score
+        </h5>
+        <h5 id="highScoreTxt">
+          High Score
+        </h5>
+      </div>
+      <h1 id="word"></h1>
+      <div class="btnContainer">
+        <button class="btnChoice" id="btnNotSeen">
+          Not
+          <br>
+          Seen
+        </button>
+        <button class="btnChoice" id="btnSeen">
+          Seen
+        </button>
+      </div>
+      <div class="indicator_icon_container">
+        <div class="indicator_icon"></div>
         <div class="info_box">
-          <p>This is a memory game</p>
+          <p>
+            This is a memory game. Remember the words to get a high score!
+          </p>
         </div>
       </div>
     </div>
