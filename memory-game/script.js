@@ -1,136 +1,56 @@
 const words = [
-  'resume',
-  'refactor',
-  'repeat',
-  'render',
-  'exclaim',
-  'remain',
-  'contain',
-  'retain',
-  "about",
-  "also",
-  "because",
-  "come",
-  "could",
-  "even",
-  "find",
-  "first",
-  "from",
-  "give",
-  "into",
-  "just",
-  "know",
-  "like",
-  "look",
-  "make",
-  "many",
-  "more",
-  "only",
-  "other",
-  "people",
-  "some",
-  "take",
-  "tell",
-  "than",
-  "that",
-  "the",
-  "their",
-  "them",
-  "then",
-  "there",
-  "these",
-  "they",
-  "thing",
-  "think",
-  "this",
-  "those",
-  "time",
-  "very",
-  "want",
-  "well",
-  "what",
-  "when",
-  "which",
-  "will",
-  "with",
-  "would"
+  'Resume',
+  'Refactor',
+  'Repeat',
+  'Render',
+  'Exclaim',
+  'Remain',
+  'Contain',
+  'Retain',
+	'Alert',
+  'Argue',
+  'Above',
+	'Alike',
+	'Arise'	,
+  'Abuse',
+	'Alive',
+  'Array'	,
+  'Actor',
+	'Allow',
+  'Aside',
+  'Began',
+  'Blame',
+  'Board',
+  'Block',
+  'Blind',
+  'Below',
+  'Beach',
+  'Debut',
+  'Entry',
+  'Forth',
+  'Group',
+  'Delay',
+  'Equal',
+  'Grown',
+  'Depth'
 ];
-const unseenWords = [
-  'resume',
-  'refactor',
-  'repeat',
-  'render',
-  'exclaim',
-  'remain',
-  'contain',
-  'retain',
-  "about",
-  "also",
-  "because",
-  "come",
-  "could",
-  "even",
-  "find",
-  "first",
-  "from",
-  "give",
-  "into",
-  "just",
-  "know",
-  "like",
-  "look",
-  "make",
-  "many",
-  "more",
-  "only",
-  "other",
-  "people",
-  "some",
-  "take",
-  "tell",
-  "than",
-  "that",
-  "the",
-  "their",
-  "them",
-  "then",
-  "there",
-  "these",
-  "they",
-  "thing",
-  "think",
-  "this",
-  "those",
-  "time",
-  "very",
-  "want",
-  "well",
-  "what",
-  "when",
-  "which",
-  "will",
-  "with",
-  "would"
-];
-const seenWords = [
-  
-];
+const unseenWords = [...words];
+const seenWords = [];
 
 const wordContainer = document.getElementById('word');
 
 let score = 0;
+let highScore = localStorage.getItem('highScore') || 0;
 
 function displayFirstWord() {
-  wordContainer.innerHTML = unseenWords[randomNum()];
+  wordContainer.innerHTML = words[randomNum()];
+  console.log('current word --> ', wordContainer.innerHTML);
+  console.log('unseenWords:', unseenWords);
+  console.log('seenWords:', seenWords);
 }
 
 function randomNum() {
-  return Math.floor(Math.random()* 55);
-};
-
-function viewInfoCard() {
-  const infoBox = document.querySelector('.info_box');
-  infoBox.classList.remove('active_info_box');
+  return Math.floor(Math.random() * words.length);
 }
 
 function setScore() {
@@ -138,111 +58,124 @@ function setScore() {
   scoreContainer.innerHTML = score;
 }
 
+function setHighScore() {
+  const highScoreContainer = document.getElementById('highScore');
+  highScoreContainer.innerHTML = highScore;
+}
+
+function updateHighScore() {
+  if (score > highScore) {
+    highScore = score;
+    localStorage.setItem('highScore', highScore);
+    setHighScore();
+  }
+}
+
+function displayNextWord() {
+  wordContainer.innerHTML = words[randomNum()];
+  console.log('next word:', wordContainer.innerHTML);
+}
+
+function resetArrays() {
+  seenWords.splice(0, seenWords.length);
+  unseenWords.splice(0, unseenWords.length, ...words);
+  console.log('Arrays reset.');
+}
+
+function correctAnswerAnimations() {
+
+  const indicator_icon = document.querySelector('.indicator_icon');
+  indicator_icon.classList.add('indicator_icon_correct');
+
+  const scoreValue = document.getElementById('score');
+  const scoreTxt = document.getElementById('scoreTxt');
+  scoreValue.classList.add('correct_green_glow');
+  scoreTxt.classList.add('correct_green_glow');
+
+  setTimeout(() => {
+    indicator_icon.classList.remove('indicator_icon_correct');
+    scoreValue.classList.remove('correct_green_glow');
+    scoreTxt.classList.remove('correct_green_glow');
+  }, 800);
+}
+
+function incorrectAnswerAnimations() {
+
+  const indicator_icon = document.querySelector('.indicator_icon');
+  indicator_icon.classList.add('indicator_icon_incorrect');
+
+  const scoreValue = document.getElementById('score');
+  const scoreTxt = document.getElementById('scoreTxt');
+  scoreValue.classList.add('incorrect_red_shake');
+  scoreTxt.classList.add('incorrect_red_shake');
+
+  setTimeout(() => {
+    indicator_icon.classList.remove('indicator_icon_incorrect');
+    scoreValue.classList.remove('incorrect_red_shake');
+    scoreTxt.classList.remove('incorrect_red_shake');
+  }, 800);
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   displayFirstWord();
-});
-
-document.querySelector('.indicator_icon').addEventListener('mouseover', () => {
-  const infoBox = document.querySelector('.info_box');
-  infoBox.classList.add('active_info_box');
-});
-
-document.querySelector('.indicator_icon').addEventListener('mouseout', () => {
-  setTimeout(viewInfoCard, 3000)
+  setHighScore();
 });
 
 //button event listeners
 const buttons = document.querySelectorAll('.btnChoice');
 buttons.forEach(button => {
-  button.addEventListener('click', (event) => displayNextWord(event));
+  button.addEventListener('click', (event) => wordCheck(event));
 });
 
-function displayNextWord(event) {
-  
-  const clickedBtnTxt = event.target.innerHTML;
+function wordCheck(event) {
 
-  const lastWord = wordContainer.innerHTML;
-  const lastWordIndex = words.indexOf(lastWord);
+  const currentWord = wordContainer.innerHTML;
+  const clickedBtnId = event.target.id;
 
-  const currentWord = words[randomNum()];
-  const currentWordIndex = words.indexOf(currentWord);
+  if (clickedBtnId === 'btnSeen') {
 
+    if (seenWords.includes(currentWord)) {
 
-  //If seen btn is clicked
-  if (clickedBtnTxt === 'Seen') {
-
-    //check if the word has been seen before
-    if (seenWords.indexOf(lastWord) !== -1) {
-      console.log('correct');
       score++;
+
+      displayNextWord();
       setScore();
+      updateHighScore();
+      correctAnswerAnimations();
 
-      unseenWords.splice(lastWordIndex, 1);
-      seenWords.push(lastWord);
-
-      wordContainer.innerHTML = currentWord;
-
-      const indicator_icon = document.querySelector('.indicator_icon');
-      indicator_icon.classList.remove('indicator_icon');
-      indicator_icon.classList.add('indicator_icon_correct');
-      setTimeout(() => {
-        indicator_icon.classList.remove('indicator_icon_correct');
-        indicator_icon.classList.add('indicator_icon');
-      }, 1000);
-    }else {
-      console.log('incorrect');
+    } else {
+    
       score = 0;
-      setScore();
-      displayFirstWord();
 
-      const indicator_icon = document.querySelector('.indicator_icon');
-      indicator_icon.classList.remove('indicator_icon');
-      indicator_icon.classList.add('indicator_icon_incorrect');
-      setTimeout(() => {
-        indicator_icon.classList.remove('indicator_icon_incorrect');
-        indicator_icon.classList.add('indicator_icon');
-      }, 1000);
+      setScore();
+      resetArrays();
+      displayFirstWord();
+      incorrectAnswerAnimations();
     }
-    console.log(`last word: \"${lastWord}"\ index: ${lastWordIndex} ||`, `current word: \"${currentWord}"\ index: ${currentWordIndex}`, `unseen words: ${unseenWords}`, `seen words: ${seenWords}`);
   }
 
+  if (clickedBtnId === 'btnNotSeen') {
 
-  //If not seen btn is clicked
-  if (clickedBtnTxt === 'Not Seen') {
+    if (unseenWords.includes(currentWord)) {
 
-    //check if the word has not been seen before
-    if (unseenWords.indexOf(lastWord) !== -1) {
-      console.log('correct');
       score++;
+
+      displayNextWord();
       setScore();
-      
+      updateHighScore();
+      correctAnswerAnimations();
 
-      unseenWords.splice(lastWordIndex, 1);
-      seenWords.push(lastWord);
-      
-      wordContainer.innerHTML = currentWord;
+      seenWords.push(currentWord);
+      unseenWords.splice(unseenWords.indexOf(currentWord), 1);
 
-      const indicator_icon = document.querySelector('.indicator_icon');
-      indicator_icon.classList.remove('indicator_icon');
-      indicator_icon.classList.add('indicator_icon_correct');
-      setTimeout(() => {
-        indicator_icon.classList.remove('indicator_icon_correct');
-        indicator_icon.classList.add('indicator_icon');
-      }, 1000);
-    }else {
-      console.log('incorrect');
+    } else {
+
       score = 0;
-      setScore();
-      displayFirstWord();
 
-      const indicator_icon = document.querySelector('.indicator_icon');
-      indicator_icon.classList.remove('indicator_icon');
-      indicator_icon.classList.add('indicator_icon_incorrect');
-      setTimeout(() => {
-        indicator_icon.classList.remove('indicator_icon_incorrect');
-        indicator_icon.classList.add('indicator_icon');
-      }, 2000);
+      setScore();
+      resetArrays();
+      displayFirstWord();
+      incorrectAnswerAnimations();
     }
-    console.log(`last word: \"${lastWord}"\ index: ${lastWordIndex} ||`, `current word: \"${currentWord}"\ index: ${currentWordIndex}`, `unseen words: ${unseenWords}`, `seen words: ${seenWords}`);
   }
 }
